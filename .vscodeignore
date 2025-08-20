@@ -1,0 +1,29 @@
+# Development files
+.vscode/**
+.vscode-test/**
+.git/**
+.gitignore
+.yarnrc
+vsc-extension-quickstart.md
+**/tsconfig.json
+**/tslint.json
+**/*.map
+**/*.ts
+
+# Node.js - IMPORTANT: Exclude node_modules
+node_modules/**
+
+# Python cache and development files
+**/__tests__/**
+**/.pytest_cache/**
+**/*.pyc
+**/__pycache__/**
+.venv/lib/**
+.venv/share/**
+.venv/include/**
+.venv/pyvenv.cfg
+
+# Logs and temporary files
+*.log
+.DS_Store
+Thumbs.db

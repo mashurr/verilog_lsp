@@ -1,0 +1,70 @@
+{
+    "name": "systemverilog-lsp-simple",
+    "displayName": "SystemVerilog LSP - Syntax Errors Only",
+    "description": "Simple SystemVerilog language support for syntax error detection using pygls + tree-sitter",
+    "version": "0.0.2",
+    "publisher": "mashurr",
+    "engines": {
+        "vscode": "^1.90.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mashurr/verilog-lsp-simple.git"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:verilog"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "verilog",
+                "aliases": [
+                    "Verilog",
+                    "verilog",
+                    "SystemVerilog"
+                ],
+                "extensions": [
+                    ".v",
+                    ".sv",
+                    ".vh"
+                ]
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Verilog LSP Configuration",
+            "properties": {
+                "verilogLsp.pythonPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to Python interpreter. If not set, it will try to use the python interpreter in `.venv/bin/python`."
+                },
+                "verilogLsp.serverPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to server.py (leave empty for bundled server)"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "verilogLsp.restart",
+                "title": "Restart Verilog LSP"
+            }
+        ]
+    },
+    "scripts": {
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "vsce": "^2.15.0"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^9.0.1"
+    },
+    "license": "MIT"
+}
