@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "The language server component for the SystemVerilog LSP extension.",
+  "main": "dist/server.js",
+  "private": true,
+  "engines": {
+    "node": "*"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "tree-sitter": "^0.21.1",
+    "tree-sitter-python": "^0.21.0",
+    "tree-sitter-systemverilog": "^0.2.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0"
+  }
+}

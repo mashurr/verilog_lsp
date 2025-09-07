@@ -1,7 +1,7 @@
 {
     "name": "systemverilog-lsp-simple",
     "displayName": "SystemVerilog LSP - Syntax Errors Only",
-    "description": "Simple SystemVerilog language support for syntax error detection using pygls + tree-sitter",
+    "description": "Simple SystemVerilog language support for syntax error detection using tree-sitter",
     "version": "0.0.2",
     "publisher": "mashurr",
     "engines": {
@@ -15,7 +15,8 @@
         "Programming Languages"
     ],
     "activationEvents": [
-        "onLanguage:verilog"
+        "onLanguage:verilog",
+        "onLanguage:systemverilog"
     ],
     "main": "./extension.js",
     "contributes": {
@@ -23,33 +24,23 @@
             {
                 "id": "verilog",
                 "aliases": [
-                    "Verilog",
-                    "verilog",
-                    "SystemVerilog"
+                    "Verilog"
                 ],
                 "extensions": [
                     ".v",
-                    ".sv",
                     ".vh"
+                ]
+            },
+            {
+                "id": "systemverilog",
+                "aliases": [
+                    "SystemVerilog"
+                ],
+                "extensions": [
+                    ".sv"
                 ]
             }
         ],
-        "configuration": {
-            "type": "object",
-            "title": "Verilog LSP Configuration",
-            "properties": {
-                "verilogLsp.pythonPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Path to Python interpreter. If not set, it will try to use the python interpreter in `.venv/bin/python`."
-                },
-                "verilogLsp.serverPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Path to server.py (leave empty for bundled server)"
-                }
-            }
-        },
         "commands": [
             {
                 "command": "verilogLsp.restart",
@@ -58,10 +49,15 @@
         ]
     },
     "scripts": {
+        "vscode:prepublish": "npm run compile-server",
+        "compile-server": "tsc -p ./server",
+        "watch-server": "tsc -p ./server --watch",
+        "postinstall": "cd server && npm install",
         "package": "vsce package"
     },
     "devDependencies": {
-        "vsce": "^2.15.0"
+        "@vscode/vsce": "^2.15.0",
+        "typescript": "^5.9.2"
     },
     "dependencies": {
         "vscode-languageclient": "^9.0.1"

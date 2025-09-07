@@ -1,7 +1,6 @@
 const vscode = require('vscode');
 const path = require('path');
-const fs = require('fs');
-const { LanguageClient, TransportKind } = require('vscode-languageclient/node');
+const { LanguageClient, LanguageClientOptions, serverOptions, TransportKind } = require('vscode-languageclient/node');
 
 let client;
 
@@ -10,52 +9,24 @@ let client;
  * @param {vscode.ExtensionContext} context 
  */
 function activate(context) {
-    console.log('Verilog LSP extension is activating...');
+    console.log('systemVerilog LSP extension is activating...');
 
-    // Get configuration
-    const config = vscode.workspace.getConfiguration('verilogLsp');
-    let pythonPath = config.get('pythonPath');
-
-    if (!pythonPath) {
-        // Default to the python interpreter in the extension's .venv
-        pythonPath = context.asAbsolutePath(path.join('.venv', 'bin', 'python'));
-    }
-    
-    // Check if the python interpreter exists
-    if (!fs.existsSync(pythonPath)) {
-        const message = `Python interpreter not found at: ${pythonPath}. Please check your '.venv' setup or the 'verilogLsp.pythonPath' setting.`;
-        vscode.window.showErrorMessage(message);
-        console.error(message);
-        return;
-    }
-
-    let serverPath = config.get('serverPath');
-
-    // If no custom server path, use the bundled one
-    if (!serverPath) {
-        serverPath = context.asAbsolutePath(path.join('server', 'server.py'));
-    }
-
-    console.log(`Using Python: ${pythonPath}`);
-    console.log(`Using server: ${serverPath}`);
+    // get the compiled js
+   const serverModule = context.asAbsolutePath(path.join('server', 'dist', 'server.js'));
 
     // Server options
     const serverOptions = {
-        command: pythonPath,
-        args: [serverPath],
-        transport: TransportKind.stdio,
-        options: {
-            // Set working directory to server directory for imports
-            cwd: path.dirname(serverPath)
+        run: { module: serverModule, transport: TransportKind.ipc },
+        debug: { module: serverModule, transport: TransportKind.ipc,
+            options: { execArgv: ['--nolazy', '--inspect=6009'] }
         }
     };
 
     // Client options
     const clientOptions = {
         documentSelector: [
-            { scheme: 'file', pattern: '**/*.v' },
-            { scheme: 'file', pattern: '**/*.sv' },
-            { scheme: 'file', pattern: '**/*.vh' }
+            { scheme: 'file', language: 'verilog' },
+            { scheme: 'file', language: 'systemverilog' },
         ],
         synchronize: {
             fileEvents: vscode.workspace.createFileSystemWatcher('**/*.{v,sv,vh}')
@@ -76,35 +47,36 @@ function activate(context) {
 
     // Create the language client
     client = new LanguageClient(
-        'verilogLsp',
-        'Verilog Language Server',
+        'systemverilogLsp',
+        'SystemVerilog Language Server',
         serverOptions,
         clientOptions
     );
 
     // Handle server state changes
     client.onDidChangeState((event) => {
-        console.log(`LSP State changed: ${event.oldState} -> ${event.newState}`);
-        if (event.newState === 3) { // Stopped
-            vscode.window.showErrorMessage('Verilog LSP server stopped unexpectedly');
-        }
+        // State values: 1=Stopped, 2=Starting, 3=Running
+        console.log(`LSP client state changed to: ${['Stopped', 'Starting', 'Running'][event.newState - 1]}`)
     });
-
+    console.log('Starting the language client...');
     // Start the client and server
     client.start().then(() => {
-        console.log('Verilog LSP client started successfully');
-        vscode.window.showInformationMessage('Verilog LSP activated (Syntax Error Detection)');
+        console.log('SystemVerilog LSP client started successfully');
+        vscode.window.showInformationMessage('SystemVerilog LSP activated (Syntax Error Detection)');
     }).catch((error) => {
-        console.error('Failed to start Verilog LSP client:', error);
-        vscode.window.showErrorMessage(`Failed to start Verilog LSP: ${error.message}`);
+        console.error('Failed to start SystemVerilog LSP client:', error);
+        vscode.window.showErrorMessage(`Failed to start SystemVerilog LSP: ${error.message}`);
     });
 
     // Register restart command
-    const restartCommand = vscode.commands.registerCommand('verilogLsp.restart', async () => {
-        if (client) {
+    const restartCommand = vscode.commands.registerCommand('systemverilogLsp.restart', async () => {
+        if (!client) { return; }
+        try {
             await client.stop();
             await client.start();
-            vscode.window.showInformationMessage('Verilog LSP restarted');
+            vscode.window.showInformationMessage('SystemVerilog LSP restarted');
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to restart SystemVerilog LSP: ${error.message}`);
         }
     });
 
@@ -116,7 +88,7 @@ function activate(context) {
  * @returns {Thenable<void> | undefined}
  */
 function deactivate() {
-    console.log('Verilog LSP extension is deactivating...');
+    console.log('SystemVerilog LSP extension is deactivating...');
     if (!client) {
         return undefined;
     }
