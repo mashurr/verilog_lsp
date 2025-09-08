@@ -4,7 +4,6 @@ out/test/**
 src/**
 .yarnrc
 vsc-extension-quickstart.md
-**/tsconfig.json
 **/tslint.json
 **/*.map
 **/__tests__/**
