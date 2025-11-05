@@ -9,7 +9,7 @@ let client;
  * @param {vscode.ExtensionContext} context 
  */
 function activate(context) {
-    console.log('systemVerilog LSP extension is activating...');
+    // console.log('systemVerilog LSP extension is activating...');
 
     // get the compiled js
    const serverModule = context.asAbsolutePath(path.join('server', 'dist', 'server.js'));
@@ -53,18 +53,16 @@ function activate(context) {
         clientOptions
     );
 
-    // Handle server state changes
-    client.onDidChangeState((event) => {
-        // State values: 1=Stopped, 2=Starting, 3=Running
-        console.log(`LSP client state changed to: ${['Stopped', 'Starting', 'Running'][event.newState - 1]}`)
-    });
-    console.log('Starting the language client...');
+    // // TODO: Handle server state changes
+    // client.onDidChangeState((event) => {
+    //     // State values: 1=Stopped, 2=Starting, 3=Running
+    //     console.log(`LSP client state changed to: ${['Stopped', 'Starting', 'Running'][event.newState - 1]}`)
+    // });
+    vscode.window.showInformationMessage('Starting the language client...');
     // Start the client and server
     client.start().then(() => {
-        console.log('SystemVerilog LSP client started successfully');
         vscode.window.showInformationMessage('SystemVerilog LSP activated (Syntax Error Detection)');
     }).catch((error) => {
-        console.error('Failed to start SystemVerilog LSP client:', error);
         vscode.window.showErrorMessage(`Failed to start SystemVerilog LSP: ${error.message}`);
     });
 
@@ -88,7 +86,7 @@ function activate(context) {
  * @returns {Thenable<void> | undefined}
  */
 function deactivate() {
-    console.log('SystemVerilog LSP extension is deactivating...');
+    // console.log('SystemVerilog LSP extension is deactivating...');
     if (!client) {
         return undefined;
     }
