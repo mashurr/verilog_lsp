@@ -14,9 +14,33 @@ import {
 import {
     TextDocument
 } from 'vscode-languageserver-textdocument';
+import * as path from 'path';
+import * as os from 'os';
 import * as TreeSitter from 'tree-sitter';
 const Parser = require('tree-sitter');
-const SystemVerilog = require('tree-sitter-systemverilog');
+
+// patching and trying to get the correct c++ node binding path in case of other os/platform from prebuilts. 
+const SystemVerilog = (() => {
+    try {
+        const platform = os.platform(); // 'darwin', 'linux', 'win32'
+        const arch = os.arch();       // 'x64', 'arm64'
+
+        const packageRoot = path.dirname(require.resolve('tree-sitter-systemverilog/package.json'));
+        const binaryPath = path.join(
+            packageRoot, 
+            'prebuilds',
+            `${platform}-${arch}`,
+            'tree-sitter-systemverilog.node'
+        );
+        
+        console.log(`Loading SystemVerilog grammar from: ${binaryPath}`);
+        return require(binaryPath);
+
+    } catch (error) {
+        console.error(`Failed to load native 'tree-sitter-systemverilog' grammar:`, error);
+        return null; // Return null on failure
+    }
+})();
 
 class SystemVerilogLanguageServer {
     private connection: Connection;
