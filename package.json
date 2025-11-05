@@ -2,7 +2,7 @@
     "name": "systemverilog-lsp-simple",
     "displayName": "SystemVerilog LSP - Syntax Errors Only",
     "description": "Simple SystemVerilog language support for syntax error detection using tree-sitter",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "publisher": "mashurr",
     "engines": {
         "vscode": "^1.90.0"
