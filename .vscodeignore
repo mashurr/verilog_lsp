@@ -1,29 +1,18 @@
-# Development files
-.vscode/**
-.vscode-test/**
-.git/**
+# Ignore build artifacts
+*.vsix
+
+# TODO: will change this once I add bundler, Fine with large size for now
+# **/node_modules
+
+# Ignore source control and editor configs
+.git/
 .gitignore
-.yarnrc
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/tslint.json
-**/*.map
-**/*.ts
+.vscode/
 
-# Node.js - IMPORTANT: Exclude node_modules
-node_modules/**
+# Ignore everything inside the 'server' directory...
+server/
+# ...but DO include the compiled 'dist' folder.
+!server/dist/
 
-# Python cache and development files
-**/__tests__/**
-**/.pytest_cache/**
-**/*.pyc
-**/__pycache__/**
-.venv/lib/**
-.venv/share/**
-.venv/include/**
-.venv/pyvenv.cfg
-
-# Logs and temporary files
-*.log
-.DS_Store
-Thumbs.db
+# Ignore test folders (TODO: FUTURE)
+test/

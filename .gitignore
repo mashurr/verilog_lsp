@@ -1,0 +1,29 @@
+node_modules/
+
+# Ignore all compiled output directories.
+dist/
+build/
+out/
+
+
+# VS Code Extension Packaging
+*.vsix
+
+
+# Logs and Reports
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+.nyc_output/
+
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+
+# Environment Variables
+.env*
